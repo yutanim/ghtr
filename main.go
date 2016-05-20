@@ -11,14 +11,14 @@ type Repo struct {
 	Language    string
 	Owner       string
 	Description string
-	StarNum     int
+	StarNum     string
 }
 
 type Result struct {
 	repos []Repo
 }
 
-func (r *Repo) Setter(name, language, owner, description string, starnum int) {
+func (r *Repo) Setter(name, language, owner, description, starnum string) {
 	r.Name = name
 	r.Language = language
 	r.Owner = owner
@@ -37,10 +37,15 @@ func fetchPage(url string) Result {
 	var repos []Repo
 	doc, _ := goquery.NewDocument(url)
 	doc.Find(".repo-list-item").Each(func(i int, item *goquery.Selection) {
-		path := item.Find(".repo-list-name a").Text()
+		var r Repo
+		path := strings.TrimSpace(item.Find(".repo-list-name a").Text())
 		s := strings.Split(path, "/")
 		owner, name := s[0], s[1]
-		fmt.Println(owner, name)
+		language := strings.TrimSpace(strings.Split(item.Find("p.repo-list-meta").Text(), "\n")[1])
+		starnum := strings.TrimSpace(strings.Split(item.Find("p.repo-list-meta").Text(), "\n")[5])
+		desc := strings.TrimSpace(item.Find("p.repo-list-description").Text())
+		r.Setter(name, language, owner, desc, starnum)
+		repos = append(repos, r)
 	})
 	res.repos = repos
 	return res
