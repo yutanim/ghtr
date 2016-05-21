@@ -6,23 +6,21 @@ import (
 	"strings"
 )
 
-type Repo struct {
+type Repositry struct {
 	Name        string
 	Language    string
 	Owner       string
 	Description string
+	URL         string
 	StarNum     string
 }
 
-type Result struct {
-	repos []Repo
-}
-
-func (r *Repo) Setter(name, language, owner, description, starnum string) {
+func (r *Repositry) Setter(name, language, owner, description, url, starnum string) {
 	r.Name = name
 	r.Language = language
 	r.Owner = owner
 	r.Description = description
+	r.URL = url
 	r.StarNum = starnum
 }
 
@@ -32,19 +30,23 @@ func main() {
 	fmt.Println(results)
 }
 
-func fetchPage(url string) Result {
-	res := Result{}
-	var r Repo
+func parse(item *goquery.Selection) Repositry {
+	var r Repositry
+	repoURL, _ := item.Find(".repo-list-name a").Attr("href")
+	s := strings.Split(repoURL, "/")
+	_, owner, name := s[0], s[1], s[2]
+	language := strings.TrimSpace(strings.Split(item.Find("p.repo-list-meta").Text(), "\n")[1])
+	starnum := strings.TrimSpace(strings.Split(item.Find("p.repo-list-meta").Text(), "\n")[5])
+	desc := strings.TrimSpace(item.Find("p.repo-list-description").Text())
+	r.Setter(name, language, owner, desc, repoURL, starnum)
+	return r
+}
+
+func fetchPage(url string) []Repositry {
+	var res []Repositry
 	doc, _ := goquery.NewDocument(url)
 	doc.Find(".repo-list-item").Each(func(i int, item *goquery.Selection) {
-		path := strings.TrimSpace(item.Find(".repo-list-name a").Text())
-		s := strings.Split(path, "/")
-		owner, name := s[0], s[1]
-		language := strings.TrimSpace(strings.Split(item.Find("p.repo-list-meta").Text(), "\n")[1])
-		starnum := strings.TrimSpace(strings.Split(item.Find("p.repo-list-meta").Text(), "\n")[5])
-		desc := strings.TrimSpace(item.Find("p.repo-list-description").Text())
-		r.Setter(name, language, owner, desc, starnum)
-		res.repos = append(res.repos, r)
+		res = append(res, parse(item))
 	})
 	return res
 }
@@ -57,6 +59,5 @@ func createURL(language, since string) string {
 	if since != "" {
 		url += "?since=" + since
 	}
-
 	return url
 }
