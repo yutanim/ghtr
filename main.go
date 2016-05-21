@@ -34,10 +34,9 @@ func main() {
 
 func fetchPage(url string) Result {
 	res := Result{}
-	var repos []Repo
+	var r Repo
 	doc, _ := goquery.NewDocument(url)
 	doc.Find(".repo-list-item").Each(func(i int, item *goquery.Selection) {
-		var r Repo
 		path := strings.TrimSpace(item.Find(".repo-list-name a").Text())
 		s := strings.Split(path, "/")
 		owner, name := s[0], s[1]
@@ -45,9 +44,8 @@ func fetchPage(url string) Result {
 		starnum := strings.TrimSpace(strings.Split(item.Find("p.repo-list-meta").Text(), "\n")[5])
 		desc := strings.TrimSpace(item.Find("p.repo-list-description").Text())
 		r.Setter(name, language, owner, desc, starnum)
-		repos = append(repos, r)
+		res.repos = append(res.repos, r)
 	})
-	res.repos = repos
 	return res
 }
 
