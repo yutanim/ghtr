@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"strings"
+	"errors"
 )
 
 type Repositry struct {
@@ -24,8 +25,12 @@ func (r *Repositry) Setter(name, language, owner, description, url, starnum stri
 	r.StarNum = starnum
 }
 
-func load(lang, since string) {
-	url := createURL(lang, since)
+func Load(lang string, weekly, monthly bool) {
+	url, err := createURL(lang, weekly, monthly)
+	if err != nil {
+		fmt.Print(err)
+		return
+	}
 	results := fetchPage(url)
 	fmt.Println(results)
 }
@@ -51,15 +56,20 @@ func fetchPage(url string) []Repositry {
 	return res
 }
 
-func createURL(language, since string) string {
+func createURL(language string, weekly, monthly bool) (string, error) {
+	if weekly && monthly {
+		return "", errors.New("Error:You can't set both weekly and monthly")
+	}
 	url := "https://github.com/trending"
 	if language != "" {
 		url += "/" + language
 	}
-	if since != "" {
-		url += "?since=" + since
-	} else {
+	if weekly{
 		url += "?since=weekly"
+	} else if monthly{
+		url += "?since=monthly"
+	}else {
+		url += "?since=daily"
 	}
-	return url
+	return url, nil
 }
