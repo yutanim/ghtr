@@ -6,9 +6,9 @@ import (
 )
 
 var (
-	week     = kingpin.Flag("weekly", "Search Weekly").Short('w').Bool()
-	month    = kingpin.Flag("monthly", "Search Monthly").Short('m').Bool()
-	language = kingpin.Arg("language", "Input Language").String()
+	week     = kingpin.Flag("weekly", "Search Weekly Trends").Short('w').Bool()
+	month    = kingpin.Flag("monthly", "Search Monthly Trends").Short('m').Bool()
+	language = kingpin.Arg("language", "Input Lanaguage which you want to search").String()
 )
 
 func main() {
