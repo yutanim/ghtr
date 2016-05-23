@@ -1,10 +1,11 @@
 package loader
 
 import (
+	"errors"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
+	//"github.com/fatih/color"
 	"strings"
-	"errors"
 )
 
 type Repositry struct {
@@ -25,6 +26,14 @@ func (r *Repositry) Setter(name, language, owner, description, url, starnum stri
 	r.StarNum = starnum
 }
 
+func show(rs []Repositry) {
+	for i, v := range rs {
+		fmt.Printf("#%v  %v/%v (%v)  \nDescription:%v \nURL: https://github.com%v\n %v\n",
+			i+1, v.Owner, v.Name, v.Language, v.Description, v.URL, v.StarNum)
+		fmt.Println("--------------------------------------------------------------------")
+	}
+}
+
 func Load(lang string, weekly, monthly bool) {
 	url, err := createURL(lang, weekly, monthly)
 	if err != nil {
@@ -32,7 +41,7 @@ func Load(lang string, weekly, monthly bool) {
 		return
 	}
 	results := fetchPage(url)
-	fmt.Println(results)
+	show(results[:10])
 }
 
 func parse(item *goquery.Selection) Repositry {
@@ -64,11 +73,11 @@ func createURL(language string, weekly, monthly bool) (string, error) {
 	if language != "" {
 		url += "/" + language
 	}
-	if weekly{
+	if weekly {
 		url += "?since=weekly"
-	} else if monthly{
+	} else if monthly {
 		url += "?since=monthly"
-	}else {
+	} else {
 		url += "?since=daily"
 	}
 	return url, nil
