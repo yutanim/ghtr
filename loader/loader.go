@@ -8,22 +8,12 @@ import (
 	"strings"
 )
 
-type Repositry struct {
-	Name        string
-	Language    string
-	Owner       string
-	Description string
-	URL         string
-	StarNum     string
-}
-
-func (r *Repositry) Setter(name, language, owner, description, url, starnum string) {
-	r.Name = name
-	r.Language = language
-	r.Owner = owner
-	r.Description = description
-	r.URL = url
-	r.StarNum = starnum
+func show(rs []Repositry) {
+	for i, v := range rs {
+		fmt.Printf("#%v  %v/%v (%v)  \nDescription:%v \nURL: https://github.com%v\n %v\n",
+			i+1, v.Owner, v.Name, v.Language, v.Description, v.URL, v.StarNum)
+		fmt.Println("--------------------------------------------------------------------")
+	}
 }
 
 func show(rs []Repositry) {
