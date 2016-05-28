@@ -4,22 +4,15 @@ import (
 	"errors"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
-	//"github.com/fatih/color"
+	"github.com/fatih/color"
 	"strings"
 )
 
 func show(rs []Repositry) {
 	for i, v := range rs {
-		fmt.Printf("#%v  %v/%v (%v)  \nDescription:%v \nURL: https://github.com%v\n %v\n",
+		c := color.New(color.FgCyan, color.Bold)
+		c.Printf("#%v  %v/%v (%v)  \nDescription:%v \nURL: https://github.com%v\n %v\n",
 			i+1, v.Owner, v.Name, v.Language, v.Description, v.URL, v.StarNum)
-		fmt.Println("--------------------------------------------------------------------")
-	}
-}
-
-func show(rs []Repositry) {
-	for i, v := range rs {
-		fmt.Printf("#%v  %v/%v (%v)  \nDescription:%v \nURL: https://github.com%v\n %v\n",
-			i, v.Owner, v.Name, v.Language, v.Description, v.URL, v.StarNum)
 		fmt.Println("--------------------------------------------------------------------")
 	}
 }
