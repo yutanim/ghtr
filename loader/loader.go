@@ -11,8 +11,8 @@ import (
 func show(rs []Repositry) {
 	for i, v := range rs {
 		c := color.New(color.FgCyan, color.Bold)
-		c.Printf("#%v  %v/%v (%v)  \nDescription:%v \nURL: https://github.com%v\n %v\n",
-			i+1, v.Owner, v.Name, v.Language, v.Description, v.URL, v.StarNum)
+		c.Printf("#%v  %v/%v (%v)\n", i+1, v.Owner, v.Name, v.Language)
+		fmt.Printf("Description:%v \nURL: https://github.com%v\n %v\n", v.Description, v.URL, v.StarNum)
 		fmt.Println("--------------------------------------------------------------------")
 	}
 }
