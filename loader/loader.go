@@ -18,14 +18,18 @@ func show(rs []Repositry) {
 	}
 }
 
-func Load(lang string, weekly, monthly bool) {
+func Load(lang string, weekly, monthly bool, all bool) {
 	url, err := createURL(lang, weekly, monthly)
 	if err != nil {
 		fmt.Print(err)
 		return
 	}
 	results := fetchPage(url)
-	show(results[:10])
+	if all {
+		show(results)
+	} else {
+		show(results[:10])
+	}
 }
 
 func parse(item *goquery.Selection) Repositry {
