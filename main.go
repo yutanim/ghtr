@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/yutanim/gothubtrends/loader"
+	"github.com/yutanim/ghtr/loader"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
